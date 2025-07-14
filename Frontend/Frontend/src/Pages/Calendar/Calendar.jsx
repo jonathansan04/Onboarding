@@ -16,7 +16,7 @@ const CalendarioOnboarding = () => {
                     start: colaborador.date,
                     end: colaborador.date_tec,
                     description: `Onboarding Técnico: ${colaborador.state_welcome}`,
-                    color: colaborador.state_technical === "Correcto" ? "green" : "red",
+                    color: colaborador.state_technical === "Correcto" ? "green" : "blue",
                 }));
                 setEventos(eventos);
             } catch (error) {

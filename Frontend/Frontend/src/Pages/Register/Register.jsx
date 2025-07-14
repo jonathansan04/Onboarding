@@ -14,13 +14,14 @@ const Register = () => {
         getColaborador();
     }, [estado]);
 
-
+    // Mostrar colaboradores
     const getColaborador = async ()=>{
          try {
             const response = await axios.get('http://localhost:3000/onboarding',{
                 params: { estado}, 
             
             });
+            //Ajuste de fecha
             const datos = response.data.map( colaborador =>{
                 const fecha = new Date(colaborador.date);
                 const fechat = new Date(colaborador.date_tec);
@@ -46,19 +47,19 @@ const Register = () => {
                
             };
             })
-
+            //Envio de datos
             console.log("data", response.data);
             setValores(datos);
 
              } catch (error) {
             console.error('Error fetching valores:', error);
-            setValores([]); // Restablecer a un array vacío en caso de error
+            setValores([]); 
         }
     }
-
+    //Eliminar colaborador
     const deleteColaborador = async (id) => {
-    console.log("ID a eliminar:", id);  // Verifica el valor de `id`
-    
+    console.log("ID a eliminar:", id);  
+    //Verificar el id
     if (id === undefined) {
         console.error("El ID no está definido.");
         return;
@@ -67,13 +68,14 @@ const Register = () => {
     try {
         const response = await axios.delete(`http://localhost:3000/onboarding/${id}`);
         console.log('Colaborador eliminado:', response.data);
-        getColaborador(); // Actualiza la lista de colaboradores después de eliminar
+        // Actualiza la lista de colaboradores después de eliminar
+        getColaborador(); 
     } catch (error) {
         console.error('Error al eliminar el colaborador:', error.response ? error.response.data : error.message);
     }
 };
 
-
+    //Datos para editar el colaborador
     const editarColaborador = (colaborador) =>{
         setValue('name', colaborador.name);
         setValue('email', colaborador.email);
@@ -85,7 +87,7 @@ const Register = () => {
     }
 
     
-
+    //Acción para registrar o actualizar los datos
     const onSubmit = async (data) => {
     const datos = {
         name: data.name,
@@ -97,7 +99,7 @@ const Register = () => {
     };
 
     console.log('Datos enviados:', datos); // Verifica los datos que se están enviando
-
+    // Se verifica si es registrar o editar
     try {
         if (editaColaborador) {
             // Si estamos editando, hacemos una PUT
@@ -109,13 +111,15 @@ const Register = () => {
             console.log('Editado:', response.data);
         } else {
             const response = await axios.post('http://localhost:3000/onboarding/', datos, {
+                // Usar JSON como tipo de contenido
                 headers: {
-                    'Content-Type': 'application/json', // Usar JSON como tipo de contenido
+                    'Content-Type': 'application/json', 
                 },
             });
             console.log('Colaborador creado:', response.data);
         }
-        getColaborador(); // Actualiza la lista después de registrar
+         // Actualiza la lista después de registrar
+        getColaborador();
         seteditaColaborador(null);
         reset();
     } catch (error) {
@@ -123,7 +127,7 @@ const Register = () => {
     }
 };
 
-
+    //Filtro de busqueda
     const consultarfiltro =() =>{
        
         getColaborador();
@@ -131,12 +135,10 @@ const Register = () => {
 
 return (
     <>  
-    <h1>Registro</h1>
-     
     <form onSubmit={handleSubmit(onSubmit)} className="container mt-5 p-4 shadow-sm bg-light rounded">
-  <h2 className="mb-4 text-center">{editaColaborador ? 'Actualizar Colaborador' : 'Registrar Colaborador'}</h2>
+    <h2 className="mb-4 text-center">{editaColaborador ? 'Actualizar Colaborador' : 'Registrar Colaborador'}</h2>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="name" className="form-label">Nombre completo</label>
     <input 
       type="text" 
@@ -145,9 +147,9 @@ return (
       placeholder="Nombre completo"
       {...register('name', { required: true })}
     />
-  </div>
+    </div>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="email" className="form-label">Correo electrónico</label>
     <input 
       type="email" 
@@ -156,9 +158,9 @@ return (
       placeholder="Correo electrónico"
       {...register('email', { required: true })}
     />
-  </div>
+    </div>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="date" className="form-label">Fecha de ingreso</label>
     <input 
       type="date" 
@@ -166,21 +168,21 @@ return (
       id="date" 
       {...register('date', { required: true })}
     />
-  </div>
+    </div>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="state_welcome" className="form-label">Estado de bienvenida</label>
     <select 
       className="form-select" 
       id="state_welcome" 
       {...register('state_welcome', { required: true })}
-    >
+        >
       <option value="Completo">Completo</option>
       <option value="Incompleto">Incompleto</option>
     </select>
-  </div>
+    </div>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="state_technical" className="form-label">Estado técnico</label>
     <select 
       className="form-select" 
@@ -190,9 +192,9 @@ return (
       <option value="Completo">Completo</option>
       <option value="Incompleto">Incompleto</option>
     </select>
-  </div>
+    </div>
 
-  <div className="mb-3">
+    <div className="mb-3">
     <label htmlFor="date_tec" className="form-label">Fecha de onboarding</label>
     <input 
       type="date" 
@@ -200,9 +202,9 @@ return (
       id="date_tec" 
       {...register('date_tec', { required: true })}
     />
-  </div>
+    </div>
 
-  <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-center">
     <button 
       className="btn btn-success w-50" 
       type="submit"
@@ -216,7 +218,7 @@ return (
     <div className="container mt-5">
             <div className="card">
             <div className="card-header ">
-                <h5>¿Deseas filtrar los colaboradores por el estado?</h5>
+                <h5>¿Deseas filtrar los colaboradores por el estado técnico?</h5>
                 <select className="form-control" aria-label="Username" aria-describedby="basic-addon1" type="text"  placeholder="Estado"  onChange={(e) => setEstado(e.target.value)}>
                   <option value="">Todos</option>
                   <option value="Completo">Completo</option>
